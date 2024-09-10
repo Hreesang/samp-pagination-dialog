@@ -127,7 +127,7 @@ Shows a pagination dialog to specified player.
 > - `playerid` Player who will be shown the dialog.
 > - `dialogid` Index of pagination dialog that will be triggered by the player.
 > - `style` Pagination dialog style.
-> - `caption` Caption for the pagination dialog. Use `{page}` to display the current page and `{maxPages}` for the max pages, see [test.pwn](./test.pwn#48).
+> - `caption` Caption for the pagination dialog. Use `{page}` to display the current page and `{maxPages}` for the max pages, see [test.pwn](./test.pwn#L48).
 > - `List:items` Items of the dialog that's added by `AddPaginationDialogItem(Str)`.
 > - `const button1[]` Left button of the dialog response.
 > - `const button2[]` Right button of the dialog response.
@@ -211,7 +211,7 @@ Shows a pagination dialog to specified player, but this one has PawnPlus' task s
 >
 > - `playerid` Player who will be shown the dialog.
 > - `style` Pagination dialog style.
-> - `caption` Caption for the pagination dialog. Use `{page}` to display the current page and `{maxPages}` for the max pages, see [test.pwn](./test.pwn#48).
+> - `caption` Caption for the pagination dialog. Use `{page}` to display the current page and `{maxPages}` for the max pages, see [test.pwn](./test.pwn#L48).
 > - `List:items` Items of the dialog that's added by `AddPaginationDialogItem(Str)`.
 > - `const button1[]` Left button of the dialog response.
 > - `const button2[]` Right button of the dialog response.
@@ -222,7 +222,7 @@ Shows a pagination dialog to specified player, but this one has PawnPlus' task s
 
 > **Return Values:**
 >
-> - `Task:task` A task where the result will be [E_ASYNC_PAGE_DIALOG](./pagination_dialog_async.inc#69),
+> - `Task:task` A task where the result will be [E_ASYNC_PAGE_DIALOG](./pagination_dialog_async.inc#L69),
 
 ## Credits
 
