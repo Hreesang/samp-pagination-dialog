@@ -2,10 +2,10 @@
 // Include Guards
 // -
 
-#if defined _pagination_dialog_included
+#if defined _INC_pagination_dialog
 	#endinput
 #endif
-#define _pagination_dialog_included
+#define _INC_pagination_dialog
 
 
 // -
