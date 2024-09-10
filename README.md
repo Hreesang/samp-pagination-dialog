@@ -72,14 +72,9 @@ public OnPaginationDialogResponse(playerid, dialogid, bool:response, listitem)
 }
 ```
 
-Have a look at `test.pwn` for more detailed usage information.
+Have a look at [test.pwn](./test.pwn) for more detailed usage information.
 
 ## Testing
-
-<!--
-Depending on whether your package is tested via in-game "demo tests" or
-y_testing unit-tests, you should indicate to readers what to expect below here.
--->
 
 To test, simply build and run the package:
 
@@ -88,10 +83,106 @@ sampctl build
 sampctl run
 ```
 
+## Declarations
+
+| Declaration                     | Value                           | Editable? | Description                                                                   |
+| ------------------------------- | ------------------------------- | --------- | ----------------------------------------------------------------------------- |
+| PAGINATION_DIALOG_ID            | 1847                            | Yes       | Index used to reference the native's dialog.                                  |
+| DEFAULT_PAGINATION_DIALOG_ITEMS | -1                              | Yes       | Page breaks depends on 4096 string size if the max items value is using this. |
+| MAX_PAGINATION_DIALOG_ITEMS     | DEFAULT_PAGINATION_DIALOG_ITEMS | Yes       | Max items to be shown per page, depending on 4096 string size is the default. |
+| MAX_PAGINATION_DIALOG_CAPTION   | 64                              | No        | Max string size for the dialog caption.                                       |
+| MAX_PAGINATION_DIALOG_BUTTON    | 64                              | No        | Max string size for the dialog buttons.                                       |
+| PAGE_DIALOG_STYLE_LIST          | DIALOG_STYLE_LIST               | No        | Pagination dialog style                                                       |
+| PAGE_DIALOG_STYLE_TABLIST       | DIALOG_STYLE_TABLIST            | No        | Pagination dialog style                                                       |
+| PAGE_DIALOG_STYLE_TABLIST_HDRS  | DIALOG_STYLE_TABLIST_HDRS       | No        | Pagination dialog style                                                       |
+
 ## APIs
 
-TBA
+### pagination_dialog.inc
+
+```pawn
+public OnPaginationDialogResponse(playerid, dialogid, bool:response, listitem)
+```
+
+> **Parameters:**
+>
+> - `playerid` Player who received the dialog response.
+> - `dialogid` Index of pagination dialog that's triggered by the player.
+> - `bool:response` Boolean response of the dialog: `true` and `false`. It will be `false` if player closes the dialog on next or previous button/item.
+> - `listitem` Index of item the player selected. `-1` if player closed the dialog on next or previous button.
+
+> **Return Values:**
+>
+> - `any number` Nothing happens.
+
+```pawn
+stock bool:ShowPaginationDialog(playerid, dialogid, PAGE_DIALOG_STYLE:style, const caption[], List:items, const button1[], const button2[] = "", const nextButton[] = ">>>", const prevButton[] = "<<<", page = 0, maxItems = MAX_PAGINATION_DIALOG_ITEMS)
+```
+
+Shows a pagination dialog to specified player.
+
+> **Parameters:**
+>
+> - `playerid` Player who will be shown the dialog.
+> - `dialogid` Index of pagination dialog that will be triggered by the player.
+> - `style` Pagination dialog style.
+> - `caption` Caption for the pagination dialog. Use `{page}` to display the current page and `{maxPages}` for the max pages, see [test.pwn](./test.pwn#48).
+> - `List:items` Items of the dialog that's added by `AddPaginationDialogItem(Str)`.
+> - `const button1[]` Left button of the dialog response.
+> - `const button2[]` Right button of the dialog response.
+> - `const nextButton[]` Button to move to the next page, default is `>>>`.
+> - `const prevButton[]` Button to move to the previous page, default is `<<<`.
+> - `page` Page number to be opened at first, default is `0`.
+> - `maxItems` Max items per page, default is `MAX_PAGINATION_DIALOG_ITEMS`.
+
+> **Return Values:**
+>
+> - `true` if success.
+> - `false` if not success: player not connected or invalid items.
+
+```pawn
+stock AddPaginationDialogItem(List:items, const string[])
+stock AddPaginationDialogItemStr(List:items, ConstStringTag:str)
+```
+
+Adds an item to the list of items for a pagination dialog.
+
+> **Parameters:**
+>
+> - `List:items` List of the items created by `list_new`.
+> - `string` or `ConstStringTag:str` Item string to be put into the list. It supports both plain and PawnPlus' string.
+
+```pawn
+stock bool:OpenPaginationDialogPage(playerid, page)
+```
+
+Navigates to a page from the specified player's current opened pagination dialog.
+
+> **Parameters:**
+>
+> - `playerid` Player that will do the navigation.
+> - `page` Page number to navigate. It's zero-indexed.
+
+> **Return Values:**
+>
+> - `true` if success.
+> - `false` if player doesn't have any active pagination dialog.
+
+```pawn
+stock bool:ClosePaginationDialog(playerid)
+```
+
+Closes the specified player's current opened pagination dialog.
+
+> **Parameters:**
+>
+> - `playerid` Player that will close the dialog.
+
+> **Return Values:**
+>
+> - `true` if success
+> - `false` if player doesn't have any active pagination dialog.
 
 ## Credits
 
-- [Hreesang](https://github.com/Hreesang), the library creator
+- [Hreesang](https://github.com/Hreesang) for making the library.
