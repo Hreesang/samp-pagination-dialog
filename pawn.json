@@ -1,0 +1,21 @@
+{
+  "user": "Hreesang",
+  "repo": "samp-pagination-dialog",
+  "tag": "1.0.0",
+  "entry": "test.pwn",
+  "output": "gamemodes/test.amx",
+  "dev_dependencies": [
+    "pawn-lang/samp-stdlib#8ffb055624308b25521665b60e78b5e6e6b3717f",
+    "pawn-lang/pawn-stdlib#e96507d9a6ddaae5bb0f3ec31479ba805aeff964",
+    "Zeex/samp-plugin-crashdetect:v4.21",
+    "IS4Code/PawnPlus:v1.4.3",
+    "Y-Less/sscanf:v2.13.8",
+    "ScavengeSurvive/test-boilerplate#3c569e0e4293fc1d46286146cb9ee4bb5273fd10",
+    "pawn-lang/YSI-Includes:v5.10.0006"
+  ],
+  "local": true,
+  "runtime": {
+    "version": "0.3.DL",
+    "port": 7778
+  }
+}
