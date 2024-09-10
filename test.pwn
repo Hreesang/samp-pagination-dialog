@@ -49,6 +49,61 @@ main()
 	return 1;
 }
 
+@cmd() dialogtablist(const playerid, const params[], const help)
+{
+	#pragma unused help
+
+	new totalItems, maxItems;
+	if (sscanf(params, "iI(-1)", totalItems, maxItems)) {
+		return SendClientMessage(playerid, -1, "Usage: /dialogtablist [total items] [opt: max items per page]");
+	}
+
+	if (totalItems < 0) {
+		return SendClientMessage(playerid, -1, "Total items should be one or more.");
+	}
+
+	if (maxItems != DEFAULT_PAGINATION_DIALOG_ITEMS && !(1 <= totalItems)) {
+		return SendClientMessage(playerid, -1, "Max items should be one or more.");
+	}
+
+	new List:items = list_new();
+	for (new i = 0; i < totalItems; i++) {
+		new idx = random(sizeof dialogItems);
+		AddPaginationDialogItemStr(items, str_format("%s\tA tab", dialogItems[idx]));
+	}
+
+	ShowPaginationDialog(playerid, random(1000), PAGE_DIALOG_STYLE_TABLIST, "Dialog Tablist ({page}/{maxPages})", items, "Asu", .maxItems = maxItems);
+	return 1;
+}
+
+@cmd() dialogheaders(const playerid, const params[], const help)
+{
+	#pragma unused help
+
+	new totalItems, maxItems;
+	if (sscanf(params, "iI(-1)", totalItems, maxItems)) {
+		return SendClientMessage(playerid, -1, "Usage: /dialogheaders [total items] [opt: max items per page]");
+	}
+
+	if (totalItems < 0) {
+		return SendClientMessage(playerid, -1, "Total items should be one or more.");
+	}
+
+	if (maxItems != DEFAULT_PAGINATION_DIALOG_ITEMS && !(1 <= totalItems)) {
+		return SendClientMessage(playerid, -1, "Max items should be one or more.");
+	}
+
+	new List:items = list_new();
+	AddPaginationDialogItem(items, "Text\tWoah?");
+	for (new i = 0; i < totalItems; i++) {
+		new idx = random(sizeof dialogItems);
+		AddPaginationDialogItemStr(items, str_format("%s\tTrue", dialogItems[idx]));
+	}
+
+	ShowPaginationDialog(playerid, random(1000), PAGE_DIALOG_STYLE_TABLIST_HDRS, "Dialog Tablist Headers ({page}/{maxPages})", items, "Asu", .maxItems = maxItems);
+	return 1;
+}
+
 public OnPaginationDialogResponse(playerid, dialogid, bool:response, listitem)
 {
 	new string[144];

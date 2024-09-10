@@ -91,6 +91,7 @@ static enum _:E_PAGINATION_DATA {
 	E_NEXT_BUTTON[MAX_PAGINATION_DIALOG_BUTTON],
 	PAGE_DIALOG_STYLE:E_STYLE,
 	E_DIALOG_ID,
+	String:E_HEADER,
 }
 
 static bool:gs_hasOnPgdDialogRsp = false;
@@ -164,7 +165,7 @@ static stock bool:hasPrevPage(currentPage)
 static stock void:executeDialogResponse(playerid, dialogid, bool:response, listitem)
 {
 	if (gs_hasOnPgdDialogRsp) {
-		CallRemoteFunction("OnPaginationDialogResponse", "iiii", playerid, dialogid, response, listitem);
+		CallLocalFunction("OnPaginationDialogResponse", "iiii", playerid, dialogid, response, listitem);
 	}
 }
 
@@ -246,7 +247,10 @@ stock bool:OpenPaginationDialogPage(playerid, page)
 		new string[256];
 		list_get_str(paginationData[E_ITEMS], i, string);
 
-		strcat(dialogInfo, "\n");
+		if (i != 0) {
+			strcat(dialogInfo, "\n");
+		}
+
 		strcat(dialogInfo, string);
 	}
 
@@ -258,11 +262,19 @@ stock bool:OpenPaginationDialogPage(playerid, page)
 		format(buttonString, sizeof buttonString, "%s\n", paginationData[E_PREV_BUTTON]);
 		strins(dialogInfo, buttonString, 0);
 	}
-
+	
 	if (hasNext) {
 		new buttonString[MAX_PAGINATION_DIALOG_BUTTON + 3];
 		format(buttonString, sizeof buttonString, "\n%s", paginationData[E_NEXT_BUTTON]);
 		strcat(dialogInfo, buttonString);
+	}
+
+	if (str_valid(paginationData[E_HEADER])) {
+		new header[256];
+		str_get(paginationData[E_HEADER], header);
+		
+		strcat(header, "\n");
+		strins(dialogInfo, header, 0);
 	}
 	
 	paginationData[E_CURRENT_PAGE] = page;
@@ -310,6 +322,16 @@ stock bool:ShowPaginationDialog(playerid, dialogid, PAGE_DIALOG_STYLE:style, con
 	}
 
 	new paginationData[E_PAGINATION_DATA];
+	
+	if (style == PAGE_DIALOG_STYLE_TABLIST_HDRS) {
+		new header[256];
+		list_get_str(items, 0, header);
+		paginationData[E_HEADER] = str_acquire(str_new(header));
+		list_remove(items, 0);
+	} else {
+		paginationData[E_HEADER] = INVALID_STRING;
+	}
+	
 	paginationData[E_ITEMS] = items;
 	paginationData[E_MAX_PAGE_ITEMS] = getMaxPageItems(items, maxItems);
 	paginationData[E_MAX_PAGES] = getMaxPages(items, paginationData[E_MAX_PAGE_ITEMS]);
@@ -321,8 +343,30 @@ stock bool:ShowPaginationDialog(playerid, dialogid, PAGE_DIALOG_STYLE:style, con
 	strcat(paginationData[E_NEXT_BUTTON], nextButton, MAX_PAGINATION_DIALOG_BUTTON);
 	paginationData[E_STYLE] = style;
 	paginationData[E_DIALOG_ID] = dialogid;
-	pool_set_arr(gs_playersPaginationPool, playerid, paginationData);
 
+	if (paginationData[E_STYLE] == PAGE_DIALOG_STYLE_TABLIST) {
+		new curTabs = 0;
+		new pos = -1;
+		
+		while ((pos = strfind(paginationData[E_PREV_BUTTON], "\t", false, pos)) != -1) {
+			curTabs++;
+		}
+
+		new String:firstItemStr = list_get_str_s(paginationData[E_ITEMS], 0);
+		new firstItemTabs = 0;
+		pos = -1;
+		new String:findValueStr = str_new_static("\t");
+
+		while ((pos = str_find(firstItemStr, findValueStr, pos)) != -1) {
+			firstItemTabs++;
+		}
+
+		for (new i = curTabs; i <= firstItemTabs; i++) {
+			strcat(paginationData[E_PREV_BUTTON], "\t ", MAX_PAGINATION_DIALOG_BUTTON);
+		}
+	}
+
+	pool_set_arr(gs_playersPaginationPool, playerid, paginationData);
 	return OpenPaginationDialogPage(playerid, page);
 }
 
@@ -335,6 +379,11 @@ stock bool:ClosePaginationDialog(playerid)
 	new paginationData[E_PAGINATION_DATA];
 	pool_get_arr(gs_playersPaginationPool, playerid, paginationData);
 	list_delete(paginationData[E_ITEMS]);
+
+	if (str_valid(paginationData[E_HEADER])) {
+		str_delete(paginationData[E_HEADER]);
+	}
+
 	pool_remove(gs_playersPaginationPool, playerid);
 
 	if (!pool_size(gs_playersPaginationPool)) {
@@ -410,6 +459,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	}
 
 	if (isPageTransition) {
+		if (!response) {
+			new pageDialogID = paginationData[E_DIALOG_ID];
+			ClosePaginationDialog(playerid);
+			executeDialogResponse(playerid, pageDialogID, false, -1);
+		}
 		return 1;
 	}
 	
