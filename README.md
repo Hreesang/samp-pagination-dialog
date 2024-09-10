@@ -222,8 +222,7 @@ Shows a pagination dialog to specified player, but this one has PawnPlus' task s
 
 > **Return Values:**
 >
-> - `true` if success.
-> - `false` if not success: player not connected or invalid items.
+> - `Task:task` A task where the result will be [E_ASYNC_PAGE_DIALOG](./pagination_dialog_async.inc#69),
 
 ## Credits
 
