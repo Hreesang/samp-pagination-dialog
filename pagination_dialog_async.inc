@@ -108,11 +108,11 @@ stock Task:ShowPaginationDialogAsync(playerid, PAGE_DIALOG_STYLE:style, const ca
 {
     if (gs_playersTaskPool == INVALID_POOL) {
         gs_playersTaskPool = pool_new();
-    }
-
-    if (pool_has(gs_playersTaskPool, playerid)) {
-        new Task:t = Task:pool_get(gs_playersTaskPool, playerid);
-        task_delete(t);
+    } else {
+        if (pool_has(gs_playersTaskPool, playerid)) {
+            new Task:t = Task:pool_get(gs_playersTaskPool, playerid);
+            task_delete(t);
+        }
     }
 
     new Task:t = task_new();

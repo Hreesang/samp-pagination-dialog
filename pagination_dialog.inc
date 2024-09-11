@@ -318,6 +318,10 @@ stock bool:ShowPaginationDialog(playerid, dialogid, PAGE_DIALOG_STYLE:style, con
 			new paginationData[E_PAGINATION_DATA];
 			pool_get_arr(gs_playersPaginationPool, playerid, paginationData);
 			list_delete(paginationData[E_ITEMS]);
+
+			if (str_valid(paginationData[E_HEADER])) {
+				str_delete(paginationData[E_HEADER]);
+			}
 		}
 	}
 
