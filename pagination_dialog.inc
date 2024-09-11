@@ -392,7 +392,7 @@ stock bool:ClosePaginationDialog(playerid)
 	}
 
 	#if defined HidePlayerDialog
-		HidePlayerDialog(playerid)
+		HidePlayerDialog(playerid);
 	#else
 		ShowPlayerDialog(playerid, -1, DIALOG_STYLE_LIST, "", "", "", "");
 	#endif

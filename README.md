@@ -186,6 +186,8 @@ Closes the specified player's current opened pagination dialog.
 
 ### pagination_dialog_async.inc
 
+Check the [examples_async.pwn](./examples_async.pwn) file for some basic examples.
+
 ```pawn
 stock Task:ShowPaginationDialogAsync(playerid, PAGE_DIALOG_STYLE:style, const caption[], List:items, const button1[], const button2[] = "", const nextButton[] = ">>>", const prevButton[] = "<<<", page = 0, maxItems = MAX_PAGINATION_DIALOG_ITEMS)
 
